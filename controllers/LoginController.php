@@ -1,6 +1,5 @@
 <?php
     require '../config/db.php';
-    require '../config/global.php';
     $errors=[];
     if($_SERVER['REQUEST_METHOD']==="POST"){
         $student_name = $_POST['student_name'];
