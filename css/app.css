@@ -1,7 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-label {
+.answer {
     @apply ps-2;
 }
 input[type="radio"]:checked {

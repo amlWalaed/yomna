@@ -1,5 +1,7 @@
 <?php
     require '../config/db.php';
+    require '../config/session.php';
+
     $errors=[];
     if($_SERVER['REQUEST_METHOD']==="POST"){
         $student_name = $_POST['student_name'];
@@ -19,8 +21,8 @@
             $query = 'INSERT INTO students (name,school,gender) values( :name , :school , :gender)';
             $statement = $conn->prepare($query);
             $statement->execute(['name'=>$student_name,'school'=>$school_name,'gender'=>$gender]);
-            
            $_SESSION['student_name']=$student_name;
+           $_SESSION['id']=$conn->lastInsertId();
             header('location: ../pages/questions.php');
             exit();
         }

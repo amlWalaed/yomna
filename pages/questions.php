@@ -1,4 +1,10 @@
 
+<?php
+require '../controllers/QuestionsController.php';
+if(!isset($_SESSION['student_name'])){
+    header('Location: login.php');
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,62 +17,26 @@
     <main class="grid p-12 place-items-center bg-emerald-100">
         <form method="post" action="../controllers/QuestionsController.php" class="w-full max-w-sm p-6 space-y-6 border rounded shadow text-emerald-700 bg-black/10">
                <section id="questions-card" class="space-y-6">
-           
+           <?php
+           foreach($questions as $question){
+            $chooses = json_decode($question->chooses, true); 
+            echo"<div>
+            <h2 class='question'>{$question->question}</h2>
+            ";
+            foreach($chooses as $key=>$value){
+                echo"<div><label>
+                <input type='radio' value='$key' name='$question->id' />
+                <span class='answer'>$value</span>
+                </label>
+                </div>";
+            }
+            echo"</div>";
+           }
+           ?>
               </section>
-              <button type="submit">Send</button>
+              <button type="submit" class="block px-2 py-1 mx-auto text-white transition-colors border rounded bg-emerald-700 hover:bg-emerald-800 hover:outline hover:outline-emerald-300 w-fit">Send</button>
         </form>
 
     </main>
-    <script>
-        let currentQuestion = 0;
-        let questions =[]
-        
-        document.addEventListener('DOMContentLoaded', function(){
-            try{
-                fetch('../controllers/QuestionsController.php').then((res)=> res.json()
-                ).then((response)=>{
-                    
-                   questions = response
-                   createQuestion()
-                })
-            }catch(e){
-                throw Error(e.message)
-            }
-        })
-        const createQuestion = () => {
-           let questionsCard =document.querySelector('#questions-card')
-         questions.forEach((question)=>{
-             
-             let questionCard = document.createElement('div')
-              let questionContainer = document.createElement('h2')
-              questionContainer.innerHTML =question.question
-              questionContainer.classList.add('question')
-              questionCard.appendChild(questionContainer)
-
-              let choosesContainer = document.createElement('div')
-              let chooses = JSON.parse(question.chooses)
-              for(index in chooses ){
-                 let chooseContainer = document.createElement('div')
-                 let radioInput = document.createElement('input')
-                 let Inputlabel = document.createElement('label')
-
-                 Inputlabel.setAttribute('for',index)
-                 Inputlabel.textContent = chooses[index]
-                 radioInput.setAttribute('type', 'radio')
-                 radioInput.setAttribute('id', index)
-                 radioInput.setAttribute('name',question.id )
-                 radioInput.setAttribute('value', index)
-                 chooseContainer.appendChild(radioInput)
-                 chooseContainer.appendChild(Inputlabel)
-                 choosesContainer.appendChild(chooseContainer)
-              }
-              questionCard.appendChild(choosesContainer)
-              questionsCard.appendChild(questionCard)
-
-
-         })
-        }
-       
-    </script>
 </body>
 </html>
